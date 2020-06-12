@@ -1,0 +1,38 @@
+= form_with model: group, local: true do |f|
+  - if group.errors.any?
+    .SettingGroupForm__errors
+      %h2= "#{group.errors.full_messages.count}件のエラーが発生しました。"
+      %ul
+        - group.errors.full_messages.each do |message|
+          %li= message
+  .SettingGroupForm__field
+    .SettingGroupForm__leftField
+      = f.label :name, "グループ名", class: 'SettingGroupForm__label'
+    .SettingGroupForm__rightField
+      = f.text_field :name, class: 'SettingGroupForm__input', placeholder: 'グループ名を入力してください'
+  .SettingGroupForm__field
+    .SettingGroupForm__leftField
+      %label.SettingGroupForm__label チャットメンバーを追加
+    .SettingGroupForm__rightField
+      .UserSearch
+        %input#UserSearch__field.SettingGroupForm__input{placeholder: "追加したいユーザー名を入力してください", type: "text"}/
+      #UserSearchResult
+  .SettingGroupForm__field
+    .SettingGroupForm__leftField
+      = f.label :name, value: "チャットメンバー", class: "SettingGroupForm__label"
+    .SettingGroupForm__rightField
+      .ChatMembers
+        .ChatMember
+          %p.ChatMember__name= current_user.name
+          %input{name: "group[user_ids][]", type: "hidden", value: current_user.id}
+        - group.users.each do |user|
+          - if current_user.name != user.name
+            .ChatMember
+              %p.ChatMember__name
+                = user.name
+              .ChatMember__remove.ChatMember__button{"data-user-id": user.id, "data-user-name": user.name} 削除
+              %input{name: "group[user_ids][]", type:"hidden", value: user.id}
+  .SettingGroupForm__field
+    .SettingGroupForm__leftField
+    .SettingGroupForm__rightField
+      = f.submit class: 'SettingGroupForm__button'
