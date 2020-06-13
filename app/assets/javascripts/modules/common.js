@@ -10,40 +10,62 @@ window.addEventListener("load", function () {
     data = {}, // paramsに渡すもの（formDataがnullじゃないときはこれをformDataに加える）
     formData = null // formDataオブジェクト
   }) => {
-    if (formData == null) { // formDataがnullのとき、dataをparamsに加える
-      url += "?" // paramsに送るにはまずパスの後ろに?をつける
-      Object.keys(data).forEach(function (key) { // ハッシュ（data）をeachで回す
-        url += buildQuery(key, data[key]) + "&";
-      })
-    } else { // formDataがnullじゃないとき、formDataにdataを加える
-      if (type == "GET") console.log("typeはGET以外にしてください");
-      Object.keys(data).forEach(function (key) { // ハッシュ（data）をeachで回す
-        formData.append(key, data[key]);
-      })
-    }
+    url += "?" // paramsに送るにはまずパスの後ろに?をつける
+    Object.keys(data).forEach(function (key) { // ハッシュ（data）をeachで回す
+      url += appendData(key, data[key], formData, url);
+    })
     xhr.open(type, url, true);
     xhr.responseType = "json";
     xhr.send(formData); // ajax開始
   }
 
-  const buildQuery = (key, object) => { // クエリを作成する
+  const appendData = (key, object, formData = null, url = null) => { // クエリを作成する
     const objType = Object.prototype.toString.call(object); // keyに対するvalue（object）のタイプ（ハッシュ、配列、それ以外）を調べる
-    let query = new URLSearchParams(); // クエリを作成するのに便利なオブジェクト
+    let appendTarget;
+    if (formData != null) {
+      appendTarget = formData;
+    } else {
+      appendTarget = new URLSearchParams(); // クエリを作成するのに便利なオブジェクト
+    }
     switch (objType) {
       case "[object Object]": // valueがハッシュのとき
         Object.keys(object).forEach(function (obj_key) { // ハッシュ（data）をeachで回す
-          query.append(`${key}[${obj_key}]`, object[obj_key]);
+          appendTarget.append(`${key}[${obj_key}]`, object[obj_key]);
         })
         break;
       case "[object Array]": // valueが配列のとき
         object.forEach(function (value) { // ハッシュ（data）をeachで回す
-          query.append(`${key}[]`, value);
+          appendTarget.append(`${key}[]`, value);
         })
         break;
       default: // valueがハッシュでも配列でもないとき
-        query.append(key, object);
+        appendTarget.append(key, object);
     }
-    return query.toString();
+
+    if (formData != null) {
+      return null;
+    } else {
+      return appendTarget.toString() + "&";
+    }
+
+  }
+
+  const appendForm = (formData, key, object) => {
+    const objType = Object.prototype.toString.call(object); // keyに対するvalue（object）のタイプ（ハッシュ、配列、それ以外）を調べる
+    switch (objType) {
+      case "[object Object]": // valueがハッシュのとき
+        Object.keys(object).forEach(function (obj_key) { // ハッシュ（data）をeachで回す
+          formData.append(`${key}[${obj_key}]`, object[obj_key]);
+        })
+        break;
+      case "[object Array]": // valueが配列のとき
+        object.forEach(function (value) { // ハッシュ（data）をeachで回す
+          formData.append(`${key}[]`, value);
+        })
+        break;
+      default: // valueがハッシュでも配列でもないとき
+        formData.append(key, object);
+    }
   }
 
   window.commonFunction = window.commonFunction || {};

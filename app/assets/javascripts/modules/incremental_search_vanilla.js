@@ -7,6 +7,8 @@ window.addEventListener("load", function () {
 
   const searchResult = document.querySelector('#UserSearchResult'); // 検索結果
   const memberList = document.querySelector('.ChatMembers'); // メンバー一覧
+  const groupForm = document.querySelector('form'); // フォーム
+  console.log(groupForm);
 
   const addUserToResult = (user) => { // 検索結果にユーザーを追加
     let html = `
@@ -45,6 +47,7 @@ window.addEventListener("load", function () {
       const user_id = Number(user_hidden_field.value);
       user_ids.push(user_id);
     })
+    user_ids.push("hoge");
     return user_ids;
   }
 
@@ -72,7 +75,8 @@ window.addEventListener("load", function () {
           key: 1,
           val: 2
         }
-      }
+      },
+      formData: null
     });
 
     // -----ajaxが終わったときの処理はここから-----
