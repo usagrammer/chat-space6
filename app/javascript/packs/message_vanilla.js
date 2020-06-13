@@ -62,6 +62,7 @@ window.addEventListener("load", function () {
       // ajaxに成功した時の処理はここから下
       message = XHR.response.message;
       user = XHR.response.user;
+      console.table(XHR.response);
       const html = buildHTML(message, user);
 
       messageList.insertAdjacentHTML("beforeend", html);
@@ -103,9 +104,10 @@ window.addEventListener("load", function () {
 
       const messages = XHR.response.messages;
 
+      console.log(messages);
       console.table(messages.length);
 
-      if (messages.length !== 0) {
+      if (messages.length != 0) {
         //追加するHTMLの入れ物を作る
         let html = '';
         //配列messagesの中身一つ一つを取り出し、HTMLに変換したものを入れ物に足し合わせる

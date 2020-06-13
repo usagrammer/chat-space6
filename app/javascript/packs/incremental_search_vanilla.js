@@ -1,3 +1,7 @@
+import {
+  startAjax
+} from './common.js';
+
 window.addEventListener("load", function () {
   // HTML要素の読み込みが終わったら発動
 
@@ -53,6 +57,22 @@ window.addEventListener("load", function () {
 
   let user_ids = buildUserIdList();
 
+  function buildArrayQuery(name, array) {
+    let query = "?";
+    array.forEach(value => {
+      query += `${name}[]=${value}&`
+    });
+    return query;
+  }
+
+  function buildHashQuery(hash_name, hash) {
+    let query = "?";
+    Object.keys(hash).forEach(function (hash_key) { // ハッシュ（data）をeachで回す
+      query += `${hash_name}[${hash_key}]=${hash[hash_key]}&`
+    })
+    return query;
+  }
+
   searchField.addEventListener("input", function (e) {
     const input = this.value;
 
@@ -62,9 +82,23 @@ window.addEventListener("load", function () {
     }
 
     const XHR = new XMLHttpRequest();
-    console.log(user_ids);
+    // console.log(user_ids);
 
-    window.commonFunction.startAjax({ // jqueryの$.ajaxの代わり（common.jsに記述）
+    // let url = "/users"
+    // const user = {
+    //   name: "Taro",
+    //   age: "15"
+    // }
+    // url += buildHashQuery("user", user)
+    // XHR.open("GET", url, true);
+
+    // レスポンスのタイプを指定する
+    // XHR.responseType = "json";
+
+    // sendでリクエストを送信する
+    // XHR.send();
+
+    startAjax({ // jqueryの$.ajaxの代わり（common.jsに記述）
       xhr: XHR, // さっきnewしたものを渡す
       type: "GET",
       url: "/users",
