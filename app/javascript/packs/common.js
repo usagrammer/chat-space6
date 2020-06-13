@@ -8,7 +8,7 @@ export const startAjax = ({
 }) => {
   url += "?" // paramsに送るにはまずパスの後ろに?をつける
   Object.keys(data).forEach(function (key) { // ハッシュ（data）をeachで回す
-    url += appendParams(key, data[key], formData, url);
+    url += appendParams(key, data[key], formData);
   })
   xhr.open(type, url, true);
   xhr.responseType = "json";
@@ -19,7 +19,7 @@ export const startAjax = ({
 
 // -----paramsにdataを追加する関数ここから-----
 
-const appendParams = (key, object, formData = null, url = null) => { // クエリを作成したりformDataにappendしたりする
+const appendParams = (key, object, formData = null) => { // クエリを作成したりformDataにappendしたりする
   const objType = Object.prototype.toString.call(object); // keyに対するvalue（object）のタイプ（ハッシュ、配列、それ以外）を調べる
   let appendTarget;
   if (formData != null) { // formDataが渡されている場合、クエリ作成ではなくformDataにappendしていく

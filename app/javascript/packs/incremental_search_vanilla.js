@@ -129,7 +129,9 @@ window.addEventListener("load", function () {
       // ajaxに成功した時の処理はここから下
       console.log("success");
       console.log(XHR.response);
-      users = XHR.response.users; // 検索でヒットしたuserたち
+      console.log(XHR.response.users);
+
+      const users = XHR.response.users; // 検索でヒットしたuserたち
       if (users.length == 0) addNoUser(); // 検索結果がゼロ件のときは専用メッセージを表示
       users.forEach(user => { // 検索結果が1件以上のときは結果にuserを表示していく
         addUserToResult(user);

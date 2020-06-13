@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
   def index
     # return nil if params[:input] == ""
-    binding.pry
+    # binding.pry
     @users = User.where(['name LIKE ?', "%#{params[:input]}%"] ).where.not(id: current_user.id).limit(10)
+    # binding.pry
     render json: {users: @users}
     # respond_to do |format|
     #   format.html
