@@ -13,7 +13,7 @@ window.addEventListener("load", function () {
     if (formData == null) { // formDataがnullのとき、dataをparamsに加える
       url += "?" // paramsに送るにはまずパスの後ろに?をつける
       Object.keys(data).forEach(function (key) { // ハッシュ（data）をeachで回す
-        url += `${key}=${data[key]}&`; // パスに「key=value&」を足すことでparamsに送られる
+        url += buildQuery(key, data[key]) + "&";
       })
     } else { // formDataがnullじゃないとき、formDataにdataを加える
       if (type == "GET") console.log("typeはGET以外にしてください");
@@ -26,8 +26,29 @@ window.addEventListener("load", function () {
     xhr.send(formData); // ajax開始
   }
 
+  const buildQuery = (key, object) => { // クエリを作成する
+    const objType = Object.prototype.toString.call(object); // keyに対するvalue（object）のタイプ（ハッシュ、配列、それ以外）を調べる
+    let query = new URLSearchParams(); // クエリを作成するのに便利なオブジェクト
+    switch (objType) {
+      case "[object Object]": // valueがハッシュのとき
+        Object.keys(object).forEach(function (obj_key) { // ハッシュ（data）をeachで回す
+          query.append(`${key}[${obj_key}]`, object[obj_key]);
+        })
+        break;
+      case "[object Array]": // valueが配列のとき
+        object.forEach(function (value) { // ハッシュ（data）をeachで回す
+          query.append(`${key}[]`, value);
+        })
+        break;
+      default: // valueがハッシュでも配列でもないとき
+        query.append(key, object);
+    }
+    return query.toString();
+  }
+
   window.commonFunction = window.commonFunction || {};
   window.commonFunction.startAjax = startAjax;
+  // window.commonFunction.buildQuery = buildQuery;
 
   // -----jquery風にajaxをするための関数ここまで-----
 

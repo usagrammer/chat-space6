@@ -38,23 +38,41 @@ window.addEventListener("load", function () {
     memberList.insertAdjacentHTML("beforeend", html);
   }
 
+  const buildUserIdList = () => { // 検索結果がゼロのとき
+    const user_hidden_fields = document.querySelectorAll('input[name="group[user_ids][]"]');
+    let user_ids = [];
+    user_hidden_fields.forEach(user_hidden_field => {
+      const user_id = Number(user_hidden_field.value);
+      user_ids.push(user_id);
+    })
+    return user_ids;
+  }
+
+  let user_ids = buildUserIdList();
+
   searchField.addEventListener("input", function (e) {
     const input = this.value;
+
     if (!input) { // 検索ワードが空文字のとき
       searchResult.innerHTML = ""; // 検索結果リセット
       return null;
     }
 
     const XHR = new XMLHttpRequest();
+    console.log(user_ids);
 
     window.commonFunction.startAjax({ // jqueryの$.ajaxの代わり（common.jsに記述）
       xhr: XHR, // さっきnewしたものを渡す
       type: "GET",
       url: "/users",
       data: {
-        input: input
-      },
-      formData: null, // オマケ機能、formDataを渡すときはこっちに書く。要らない時はnullか省略
+        input: input,
+        user_ids: user_ids,
+        obj: {
+          key: 1,
+          val: 2
+        }
+      }
     });
 
     // -----ajaxが終わったときの処理はここから-----
