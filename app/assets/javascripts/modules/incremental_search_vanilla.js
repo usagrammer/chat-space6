@@ -70,7 +70,7 @@ window.addEventListener("load", function () {
       url: "/users",
       data: {
         input: input,
-        user_ids: user_ids,
+        "group[user_ids]": user_ids,
         obj: {
           key: 1,
           val: 2

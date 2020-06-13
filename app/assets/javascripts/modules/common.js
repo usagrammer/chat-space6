@@ -12,19 +12,26 @@ window.addEventListener("load", function () {
   }) => {
     url += "?" // paramsに送るにはまずパスの後ろに?をつける
     Object.keys(data).forEach(function (key) { // ハッシュ（data）をeachで回す
-      url += appendData(key, data[key], formData, url);
+      url += appendParams(key, data[key], formData, url);
     })
     xhr.open(type, url, true);
     xhr.responseType = "json";
     xhr.send(formData); // ajax開始
   }
 
-  const appendData = (key, object, formData = null, url = null) => { // クエリを作成する
+  window.commonFunction = window.commonFunction || {};
+  window.commonFunction.startAjax = startAjax;
+
+  // -----jquery風にajaxをするための関数ここまで-----
+
+  // -----paramsにdataを追加する関数ここから-----
+
+  const appendParams = (key, object, formData = null, url = null) => { // クエリを作成したりformDataにappendしたりする
     const objType = Object.prototype.toString.call(object); // keyに対するvalue（object）のタイプ（ハッシュ、配列、それ以外）を調べる
     let appendTarget;
-    if (formData != null) {
+    if (formData != null) { // formDataが渡されている場合、クエリ作成ではなくformDataにappendしていく
       appendTarget = formData;
-    } else {
+    } else { // formDataは渡されていない場合、dataを元にクエリを作成していく
       appendTarget = new URLSearchParams(); // クエリを作成するのに便利なオブジェクト
     }
     switch (objType) {
@@ -34,7 +41,7 @@ window.addEventListener("load", function () {
         })
         break;
       case "[object Array]": // valueが配列のとき
-        object.forEach(function (value) { // ハッシュ（data）をeachで回す
+        object.forEach(function (value) {
           appendTarget.append(`${key}[]`, value);
         })
         break;
@@ -50,28 +57,6 @@ window.addEventListener("load", function () {
 
   }
 
-  const appendForm = (formData, key, object) => {
-    const objType = Object.prototype.toString.call(object); // keyに対するvalue（object）のタイプ（ハッシュ、配列、それ以外）を調べる
-    switch (objType) {
-      case "[object Object]": // valueがハッシュのとき
-        Object.keys(object).forEach(function (obj_key) { // ハッシュ（data）をeachで回す
-          formData.append(`${key}[${obj_key}]`, object[obj_key]);
-        })
-        break;
-      case "[object Array]": // valueが配列のとき
-        object.forEach(function (value) { // ハッシュ（data）をeachで回す
-          formData.append(`${key}[]`, value);
-        })
-        break;
-      default: // valueがハッシュでも配列でもないとき
-        formData.append(key, object);
-    }
-  }
-
-  window.commonFunction = window.commonFunction || {};
-  window.commonFunction.startAjax = startAjax;
-  // window.commonFunction.buildQuery = buildQuery;
-
-  // -----jquery風にajaxをするための関数ここまで-----
+  // -----paramsにdataを追加する関数ここまで-----
 
 })
