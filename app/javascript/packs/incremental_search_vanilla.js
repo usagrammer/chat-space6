@@ -12,7 +12,6 @@ window.addEventListener("load", function () {
   const searchResult = document.querySelector('#UserSearchResult'); // 検索結果
   const memberList = document.querySelector('.ChatMembers'); // メンバー一覧
   const groupForm = document.querySelector('form'); // フォーム
-  console.log(groupForm);
 
   const addUserToResult = (user) => { // 検索結果にユーザーを追加
     let html = `
@@ -82,21 +81,6 @@ window.addEventListener("load", function () {
     }
 
     const XHR = new XMLHttpRequest();
-    // console.log(user_ids);
-
-    // let url = "/users"
-    // const user = {
-    //   name: "Taro",
-    //   age: "15"
-    // }
-    // url += buildHashQuery("user", user)
-    // XHR.open("GET", url, true);
-
-    // レスポンスのタイプを指定する
-    // XHR.responseType = "json";
-
-    // sendでリクエストを送信する
-    // XHR.send();
 
     startAjax({ // jqueryの$.ajaxの代わり（common.jsに記述）
       xhr: XHR, // さっきnewしたものを渡す
@@ -128,8 +112,6 @@ window.addEventListener("load", function () {
 
       // ajaxに成功した時の処理はここから下
       console.log("success");
-      console.log(XHR.response);
-      console.log(XHR.response.users);
 
       const users = XHR.response.users; // 検索でヒットしたuserたち
       if (users.length == 0) addNoUser(); // 検索結果がゼロ件のときは専用メッセージを表示
