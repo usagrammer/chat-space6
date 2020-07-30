@@ -1,3 +1,7 @@
+import {
+  startAjax
+} from './common.js';
+
 window.addEventListener("load", function () {
   // HTML要素の読み込みが終わったら発動
 
@@ -40,7 +44,7 @@ window.addEventListener("load", function () {
 
     const XHR = new XMLHttpRequest();
 
-    window.commonFunction.startAjax({ // jqueryの$.ajaxの代わり（common.jsに記述）
+    startAjax({ // jqueryの$.ajaxの代わり（common.jsに記述）
       xhr: XHR, // さっきnewしたものを渡す
       type: "POST",
       url: url,
@@ -60,8 +64,8 @@ window.addEventListener("load", function () {
       }
 
       // ajaxに成功した時の処理はここから下
-      message = XHR.response.message;
-      user = XHR.response.user;
+      const message = XHR.response.message;
+      const user = XHR.response.user;
       console.table(XHR.response);
       const html = buildHTML(message, user);
 
@@ -76,57 +80,57 @@ window.addEventListener("load", function () {
     }
   })
 
-  let reloadMessages = function () {
-    //カスタムデータ属性を利用し、ブラウザに表示されている最新メッセージのidを取得
-    let last_message_id = $('.message:last').data("message-id");
+  // let reloadMessages = function () {
+  //   //カスタムデータ属性を利用し、ブラウザに表示されている最新メッセージのidを取得
+  //   let last_message_id = $('.message:last').data("message-id");
 
-    const XHR = new XMLHttpRequest();
+  //   const XHR = new XMLHttpRequest();
 
-    window.commonFunction.startAjax({ // jqueryの$.ajaxの代わり（common.jsに記述）
-      xhr: XHR, // さっきnewしたものを渡す
-      type: "GET",
-      url: "api/messages",
-      data: {
-        id: last_message_id
-      },
-      formData: null
-    });
+  //   window.commonFunction.startAjax({ // jqueryの$.ajaxの代わり（common.jsに記述）
+  //     xhr: XHR, // さっきnewしたものを渡す
+  //     type: "GET",
+  //     url: "api/messages",
+  //     data: {
+  //       id: last_message_id
+  //     },
+  //     formData: null
+  //   });
 
-    XHR.onload = () => {
-      console.log("done");
-
-
-      if (XHR.status != 200) { // ajaxに失敗した時の処理はこの中
-        console.log("failed");
-        alert(`Error ${XHR.status}: ${XHR.statusText}`);
-        return null;
-      }
-
-      const messages = XHR.response.messages;
-
-      console.log(messages);
-      console.table(messages.length);
-
-      if (messages.length != 0) {
-        //追加するHTMLの入れ物を作る
-        let html = '';
-        //配列messagesの中身一つ一つを取り出し、HTMLに変換したものを入れ物に足し合わせる
-        messages.forEach(message => {
-          console.log(message);
-          html += buildHTML(message, user);
-        });
-        messageList.insertAdjacentHTML("beforeend", html);
-        messageList.scrollTo({
-          top: messageList.scrollHeight,
-          behavior: 'smooth'
-        })
-      }
-
-    }
-
-  }
+  //   XHR.onload = () => {
+  //     console.log("done");
 
 
-  setInterval(reloadMessages, 3000);
+  //     if (XHR.status != 200) { // ajaxに失敗した時の処理はこの中
+  //       console.log("failed");
+  //       alert(`Error ${XHR.status}: ${XHR.statusText}`);
+  //       return null;
+  //     }
+
+  //     const messages = XHR.response.messages;
+
+  //     console.log(messages);
+  //     console.table(messages.length);
+
+  //     if (messages.length != 0) {
+  //       //追加するHTMLの入れ物を作る
+  //       let html = '';
+  //       //配列messagesの中身一つ一つを取り出し、HTMLに変換したものを入れ物に足し合わせる
+  //       messages.forEach(message => {
+  //         console.log(message);
+  //         html += buildHTML(message, user);
+  //       });
+  //       messageList.insertAdjacentHTML("beforeend", html);
+  //       messageList.scrollTo({
+  //         top: messageList.scrollHeight,
+  //         behavior: 'smooth'
+  //       })
+  //     }
+
+  //   }
+
+  // }
+
+
+  // setInterval(reloadMessages, 3000);
 
 })
